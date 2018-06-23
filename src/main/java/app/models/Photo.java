@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 public class Photo {
@@ -18,6 +20,10 @@ public class Photo {
 	private Integer likes;
 	
 	private Integer dislikes;
+	
+	@ManyToOne
+	@JsonIgnore
+	private Business business;
 	
 //	@OneToMany
 //	private Likes;
@@ -56,5 +62,13 @@ public class Photo {
 
 	public void setDislikes(Integer dislikes) {
 		this.dislikes = dislikes;
+	}
+
+	public Business getBusiness() {
+		return business;
+	}
+
+	public void setBusiness(Business business) {
+		this.business = business;
 	}	
 }
