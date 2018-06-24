@@ -1,9 +1,12 @@
 package app.models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class User {
@@ -17,6 +20,9 @@ public class User {
 	private String role;
 	private String phone;
 	private String email;
+	
+	@ManyToMany
+	List<Photo> likedPhotos;
 	
 	public int getId() {
 		return id;
@@ -65,5 +71,11 @@ public class User {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public List<Photo> getLikedPhotos() {
+		return likedPhotos;
+	}
+	public void setLikedPhotos(List<Photo> likedPhotos) {
+		this.likedPhotos = likedPhotos;
 	}
 }

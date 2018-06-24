@@ -17,7 +17,7 @@ import app.repositories.BusinessRepository;
 
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "${ORIGINS}", maxAge = 3600, allowCredentials = "true")
 public class BusinessService {
 	
 	@Autowired
@@ -29,12 +29,13 @@ public class BusinessService {
 	}
 	
 	@GetMapping("/api/business/{businessId}")
-	public Business findBusinessById(@PathVariable("businessId") int id) {
-		Optional<Business> b = businessRepository.findById(id);
-		if(b.isPresent()) {
-			return b.get();
-		}
-		return null;
+	public Iterable<Business> findBusinessById(@PathVariable("businessId") String id) {
+		return businessRepository.findByYelpId(id);
+	}
+	
+	@PostMapping("/api/business")
+	public Business createBusiness(@RequestBody Business business) {
+		return businessRepository.save(business);
 	}
 
 }

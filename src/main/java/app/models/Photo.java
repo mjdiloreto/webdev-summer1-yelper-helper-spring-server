@@ -1,9 +1,12 @@
 package app.models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,6 +27,9 @@ public class Photo {
 	@ManyToOne
 	@JsonIgnore
 	private Business business;
+	
+	@ManyToMany(mappedBy="likedPhotos")
+	List<User> usersWhoLike;
 	
 //	@OneToMany
 //	private Likes;
@@ -70,5 +76,13 @@ public class Photo {
 
 	public void setBusiness(Business business) {
 		this.business = business;
+	}
+
+	public List<User> getUsersWhoLike() {
+		return usersWhoLike;
+	}
+
+	public void setUsersWhoLike(List<User> usersWhoLike) {
+		this.usersWhoLike = usersWhoLike;
 	}	
 }

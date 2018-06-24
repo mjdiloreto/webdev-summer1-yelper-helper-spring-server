@@ -27,7 +27,7 @@ public class Business {
 	
 	private String price;
 	
-	private String display_price;
+	private String display_phone;
 	
 	@OneToMany(mappedBy="business")
 	private List<Photo> photos;
@@ -89,11 +89,11 @@ public class Business {
 	}
 
 	public String getDisplay_price() {
-		return display_price;
+		return display_phone;
 	}
 
 	public void setDisplay_price(String display_price) {
-		this.display_price = display_price;
+		this.display_phone = display_price;
 	}
 
 	public List<Photo> getPhotos() {
