@@ -1,5 +1,6 @@
 package app.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.models.Business;
@@ -32,7 +34,10 @@ public class PhotoService {
 	BusinessRepository businessRepository;
 	
 	@GetMapping("/api/photo")
-	public Iterable<Photo> findAllPhotos() {
+	public Iterable<Photo> findAllPhotos(@RequestParam(value="src", required=false) String src) {
+		if(src != null && !src.isEmpty()) {
+			return photoRepository.findBySrc(src);
+		}
 		return photoRepository.findAll(); 
 	}
 	
@@ -46,26 +51,45 @@ public class PhotoService {
 	}
 	
 	@PostMapping("/api/photo/{photoId}/like")
-	public void likePhoto(HttpSession session, HttpServletResponse response) {
+	public void likePhoto(HttpSession session, HttpServletResponse response,
+			@PathVariable("photoId") Integer id) {
 		User currentUser = (User) session.getAttribute("currentUser");
 		
 		if(currentUser == null) {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} else {
+			Optional<Photo> optP = photoRepository.findById(id);
+			
+			if(optP.isPresent()) {
+				Photo p = optP.get();
+				if(p.getLikes() == null) {
+					p.setLikes(1);
+				} else {
+					p.setLikes(p.getLikes() + 1);
+				}
+				photoRepository.save(p);
+			} else {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				return;
+			}
+			
 			response.setStatus(HttpServletResponse.SC_OK);
 		}
 	}
 	
 	@PostMapping("/api/business/{businessId}/photo")
 	public Photo createPhoto(@RequestBody Photo photo, 
-			@PathVariable("businessId") int businessId) {
-		Optional<Business> b = businessRepository.findById(businessId);
+			@PathVariable("businessId") String businessId,
+			HttpServletResponse response) {
+		List<Business> b = (List<Business>) businessRepository.findByYelpId(businessId);
 		
-		if(b.isPresent()) {
-			Business bus = b.get();
+		if(b.size() != 0) {
+			Business bus = b.get(0);
 			photo.setBusiness(bus);  // the lesson belongs to this module
 			return photoRepository.save(photo);
 		}
+		
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
 	}
 	
