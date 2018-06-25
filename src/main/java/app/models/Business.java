@@ -31,6 +31,9 @@ public class Business {
 	
 	@OneToMany(mappedBy="business")
 	private List<Photo> photos;
+	
+	@OneToMany(mappedBy="business")
+	private List<Review> reviews;
 
 	public int getDBid() {
 		return DBid;
@@ -102,6 +105,22 @@ public class Business {
 
 	public void setPhotos(List<Photo> photos) {
 		this.photos = photos;
+	}
+
+	public String getDisplay_phone() {
+		return display_phone;
+	}
+
+	public void setDisplay_phone(String display_phone) {
+		this.display_phone = display_phone;
+	}
+
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
 	}
 }
 	

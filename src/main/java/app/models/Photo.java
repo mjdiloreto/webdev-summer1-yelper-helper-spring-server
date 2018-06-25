@@ -29,6 +29,7 @@ public class Photo {
 	private Business business;
 	
 	@ManyToMany(mappedBy="likedPhotos")
+	@JsonIgnore
 	List<User> usersWhoLike;
 	
 //	@OneToMany

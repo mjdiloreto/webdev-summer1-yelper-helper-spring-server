@@ -22,6 +22,7 @@ import app.models.Photo;
 import app.models.User;
 import app.repositories.BusinessRepository;
 import app.repositories.PhotoRepository;
+import app.repositories.UserRepository;
 
 @RestController
 @CrossOrigin(origins = "${ORIGINS}", maxAge = 3600, allowCredentials = "true")
@@ -29,6 +30,9 @@ public class PhotoService {
 
 	@Autowired
 	PhotoRepository photoRepository;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 	@Autowired 
 	BusinessRepository businessRepository;
@@ -68,6 +72,9 @@ public class PhotoService {
 				} else {
 					p.setLikes(p.getLikes() + 1);
 				}
+				
+				currentUser.getLikedPhotos().add(p);
+				userRepository.save(currentUser);
 				return photoRepository.save(p);
 			} else {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -94,6 +101,9 @@ public class PhotoService {
 				} else {
 					p.setDislikes(p.getLikes() + 1);
 				}
+				
+				currentUser.getLikedPhotos().add(p);
+				userRepository.save(currentUser);
 				return photoRepository.save(p);
 			} else {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
