@@ -12,4 +12,7 @@ public interface PhotoRepository extends CrudRepository<Photo, Integer> {
 	Iterable<Photo> findBySrc(
 		@Param("src") String src);
 
+	@Query("SELECT p FROM Photo p ORDER BY p.likes")
+	Iterable<Photo> findPopular();
+
 }

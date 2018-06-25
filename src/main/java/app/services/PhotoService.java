@@ -54,6 +54,16 @@ public class PhotoService {
 		return null;
 	}
 	
+	@GetMapping("/api/photo/popular")
+	public Iterable<Photo> findPopularPhotos() {
+		List<Photo> pops = ((List<Photo>) photoRepository.findPopular());
+		if(pops.size() > 4) {
+			return pops.subList(0, 3);
+		} else {
+			return pops;
+		}
+	}
+	
 	@PostMapping("/api/photo/{photoId}/like")
 	public Photo likePhoto(HttpSession session, HttpServletResponse response,
 			@PathVariable("photoId") Integer id) {

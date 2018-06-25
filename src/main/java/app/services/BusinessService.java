@@ -1,5 +1,6 @@
 package app.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
@@ -42,31 +43,6 @@ public class BusinessService {
 		return businessRepository.findByYelpId(id);
 	}
 	
-	@PostMapping("/api/business/{businessId}/review")
-	public Review createReview(@PathVariable("businessId") Integer id,
-			@RequestBody Review review,
-			HttpSession session, HttpServletResponse response) {
-		User currentUser = (User) session.getAttribute("currentUser");
-		
-		if(currentUser == null) {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			return null;
-		} else {
-			Optional<Business> optBus = businessRepository.findById(id);
-			
-			if(optBus.isPresent()) {
-				Business b = optBus.get();
-				
-				review.setBusiness(b);
-				review.setUser(currentUser);
-				
-				return reviewRepository.save(review);
-			} else {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				return null;
-			}
-		}
-	}
 	
 //	@PostMapping("/api/business/{businessId}/like")
 //	public Business likeBusiness(@PathVariable("businessId") Integer id, 
