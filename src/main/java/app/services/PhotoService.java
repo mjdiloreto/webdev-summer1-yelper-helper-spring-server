@@ -51,12 +51,13 @@ public class PhotoService {
 	}
 	
 	@PostMapping("/api/photo/{photoId}/like")
-	public void likePhoto(HttpSession session, HttpServletResponse response,
+	public Photo likePhoto(HttpSession session, HttpServletResponse response,
 			@PathVariable("photoId") Integer id) {
 		User currentUser = (User) session.getAttribute("currentUser");
 		
 		if(currentUser == null) {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			return null;
 		} else {
 			Optional<Photo> optP = photoRepository.findById(id);
 			
@@ -67,13 +68,37 @@ public class PhotoService {
 				} else {
 					p.setLikes(p.getLikes() + 1);
 				}
-				photoRepository.save(p);
+				return photoRepository.save(p);
 			} else {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				return;
+				return null;
 			}
+		}
+	}
+	
+	@PostMapping("/api/photo/{photoId}/dislike")
+	public Photo dislikePhoto(HttpSession session, HttpServletResponse response,
+			@PathVariable("photoId") Integer id) {
+		User currentUser = (User) session.getAttribute("currentUser");
+		
+		if(currentUser == null) {
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			return null;
+		} else {
+			Optional<Photo> optP = photoRepository.findById(id);
 			
-			response.setStatus(HttpServletResponse.SC_OK);
+			if(optP.isPresent()) {
+				Photo p = optP.get();
+				if(p.getDislikes() == null) {
+					p.setDislikes(1);
+				} else {
+					p.setDislikes(p.getLikes() + 1);
+				}
+				return photoRepository.save(p);
+			} else {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				return null;
+			}
 		}
 	}
 	
