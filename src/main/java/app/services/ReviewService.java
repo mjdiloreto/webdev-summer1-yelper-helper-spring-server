@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,16 @@ public class ReviewService {
 		}
 	}
 	
+	@GetMapping("/api/review")
+	public Iterable<Review> findAll() {
+		return reviewRepository.findAll();
+	}
+	
+	@DeleteMapping("/api/review/{reviewId}")
+	public void deleteReview(@PathVariable("reviewId") int id) {
+		reviewRepository.deleteById(id);
+	}
+	
 	@GetMapping("/api/review/{reviewId}/user")
 	public User findUserOfReview(@PathVariable("reviewId") int id) {
 		Optional<Review> optRev = reviewRepository.findById(id);
@@ -58,6 +69,16 @@ public class ReviewService {
 		} else {
 			return null;
 		}
+	}
+	
+	@GetMapping("/api/review/recent")
+	public Iterable<Review> findRecent() {
+		List<Review> allReviews = (List<Review>) reviewRepository.findAll();
+		if(allReviews.size() > 4) {
+			return allReviews.subList(0, 3);
+		}
+		
+		return allReviews;
 	}
 
 	@PostMapping("/api/business/{businessId}/review")
